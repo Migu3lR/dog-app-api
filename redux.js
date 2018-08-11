@@ -1,28 +1,22 @@
-import AWS from "aws-sdk";
-import AWSMqtt from "aws-mqtt";
-import WebSocket from "ws";
+import iot from './libs/iotPublisher'
 
 export function handler(event, context, callback) {
     
-    AWS.config.update({ region: "us-east-1" });
-    
-    const data = JSON.parse(event);
-    console.log(event);
-    console.log(data);
+    const params = {
+        topic: `/redux/${event.cid}`,
+        payload: JSON.stringify(event),
+        qos: 0
+    };
 
-    try {
-        const publish = AWSMqtt.publisher({
-            WebSocket: WebSocket, 
-            region: AWS.config.region,
-            endpoint: 'a1ibjimaoot6ov.iot.us-east-1.amazonaws.com' 
-        })
-            
-        // publish returns a Promise
-        publish('/myTopic', 'my message').then(console.log, console.error)
-
-        callback(null, event);
-    } catch (e) {
-        console.log(e);
-        callback(e);
-    }
+    iot.publish(params, function(err, data){
+        if(err){
+            console.log(err);
+            callback(err);
+        }
+        else{
+            console.log("success?");
+            callback(null, event);
+            //context.succeed(event);
+        }
+    });
 }

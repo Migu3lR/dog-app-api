@@ -51,7 +51,7 @@ functions:
     handler: redux.handler
     events:
       - iot:
-          sql: "SELECT * FROM '/#'"
+          sql: "SELECT * FROM '/redux/api/#'"
 
 
   # Defines an HTTP API endpoint that calls the main function in create.js
