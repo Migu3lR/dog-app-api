@@ -38,8 +38,22 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
       Resource: "arn:aws:dynamodb:us-east-1:*:*"
-
+    - Effect: Allow
+      Action:
+        - iot:Connect
+        - iot:Subscribe
+        - iot:Publish
+      Resource: ["*"]
+    
 functions:
+
+  redux:
+    handler: redux.handler
+    events:
+      - iot:
+          sql: "SELECT * FROM '/#'"
+
+
   # Defines an HTTP API endpoint that calls the main function in create.js
   # - path: url path is /notes
   # - method: POST request
